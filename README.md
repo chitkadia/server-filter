@@ -15,6 +15,7 @@ This is the test repo.
 ```sh
 $ clone this repo
 $ cd server-filter
+$ give access to folder if not done: sudo chown -R $USER <Folder_Name>
 $ npm install
 ```
 
