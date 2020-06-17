@@ -1,6 +1,14 @@
 import { Component } from '@angular/core';
 
-import { LocaldataService } from './services/localdata.service';
+import { jsonData } from './localdata';
+
+interface jsonData {
+    Model: string;
+    RAM: string;
+    HDD: number;
+    Location: number;
+    Price: number;
+}
 
 @Component({
     selector: 'app-root',
@@ -9,13 +17,11 @@ import { LocaldataService } from './services/localdata.service';
 })
 export class AppComponent {
     title = 'infibeam';
-    jsonData: any = [];
+    jsonData: jsonData[] = jsonData;
 
-    constructor(
-        public readLocalData: LocaldataService
-    ) {}
+    constructor() { }
 
-    async ngOnInit() {
-        console.log(this.readLocalData.jsonData);
+    ngOnInit() {
+        console.log(this.jsonData);
     }
 }

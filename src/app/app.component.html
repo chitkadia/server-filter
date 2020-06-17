@@ -314,6 +314,25 @@
 
 <div class="content" role="main">
 
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Model</th>
+      <th>RAM</th>
+      <th>HDD</th>
+      <th>Location</th>
+      <th>Price</th>
+    </tr>
+    <tr *ngFor="let data of jsonData; let i = index">
+      <td>{{i+1}}</td>
+      <td>{{data.Model}}</td>
+      <td>{{data.RAM}}</td>
+      <td>{{data.HDD}}</td>
+      <td>{{data.Location}}</td>
+      <td>{{data.Price}}</td>
+    </tr>
+  </table>
+
   <!-- Highlight Card -->
   <div class="card highlight-card card-small">
 
