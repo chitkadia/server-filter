@@ -29,6 +29,13 @@ For production release:
 $ ng build --prod
 ```
 
+Or
+
+Just execute below script in terminal from root directory
+```sh
+$ ./prepare-build.sh
+```
+
 License
 ----
 
