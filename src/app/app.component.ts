@@ -70,9 +70,7 @@ export class AppComponent {
         this.locationList = this.jsonData.map((location, i) => {
             return location.Location
         });
-        this.locationList.filter((el, i) => {
-            return this.locationList.indexOf(el) == i
-        });
+        this.locationList = this.locationList.filter(this.removeDuplicate);
         this.slide.valueChanges.subscribe((val) => {
             if ('exteriorRang' in val) {
                 if (val.exteriorRang != 0) {
@@ -87,6 +85,17 @@ export class AppComponent {
             }
         });
         this.getThisPage(1);
+    }
+
+    /**
+     * 
+     * This function removed duplicate element from an array
+     * @param value value to check the index
+     * @param index looped index
+     * @param self array
+     */
+    removeDuplicate(value, index, self) { 
+        return self.indexOf(value) === index;
     }
 
     /**
