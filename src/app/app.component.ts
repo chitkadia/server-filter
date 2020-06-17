@@ -51,6 +51,10 @@ export class AppComponent {
     slide: FormGroup;
     checkedRam: Array<any> = [];
 
+    hddFilter = "";
+    locationFilter = "";
+    storageFilter = "";
+
     constructor(
         private formBuilder: FormBuilder
     ) {
@@ -82,58 +86,62 @@ export class AppComponent {
                 }
             }
         });
-        this.getThisPage(1, this.filteredData);
+        this.getThisPage(1);
     }
 
+    /**
+     * 
+     * This function is used to filter the data from the array of json
+     * @param element value
+     * @param itemName section
+     */
     filterData(element, itemName) {
         switch (itemName) {
             case "HDD":
-                this.showData = this.findByMatchingProperties(this.filteredData, { HDD: element });
-                this.filteredData = this.showData;
-                var data = this.showData;
-                if (element == 0) {
-                    data = this.jsonData;
-                    // this.showData = this.jsonData;
-                    // this.filteredData = this.jsonData;
-                }
-                this.getThisPage(1, data);
+                this.hddFilter = element;
                 break;
             case "Location":
-                this.showData = this.findByMatchingProperties(this.filteredData, { Location: element });
-                // this.filteredData = this.showData;
-                var data = this.showData;
-                if (element == 0) {
-                    data = this.jsonData;
-                    // this.showData = this.jsonData;
-                    // this.filteredData = this.jsonData;
-                }
-                this.getThisPage(1, data);
+                this.locationFilter = element;
                 break;
             case "STORAGE":
-                this.showData = this.findByMatchingProperties(this.filteredData, { HDD: element });
-                // this.filteredData = this.showData;
-                var data = this.showData;
-                if (element == 0) {
-                    data = this.jsonData;
-                    // this.showData = this.jsonData;
-                    // this.filteredData = this.jsonData;
-                }
-                this.getThisPage(1, data);
+                this.storageFilter = element;
                 break;
             default:
-                this.showData = this.findByMatchingProperties(this.filteredData, { HDD: element });
-                // this.filteredData = this.showData;
-                var data = this.showData;
-                if (element == 0) {
-                    data = this.jsonData;
-                    // this.showData = this.jsonData;
-                    // this.filteredData = this.jsonData;
-                }
-                this.getThisPage(1, data);
+                this.hddFilter = this.hddFilter;
                 break;
         }
+
+        this.showData = this.jsonData.filter((el) => {
+            if (el.HDD.includes(this.hddFilter) && el.Location.includes(this.locationFilter) && el.HDD.includes(this.storageFilter)) {
+                return el;
+            }
+        });
+
+        if (this.checkedRam.length) {
+            let tempArray = [];
+            this.checkedRam.map((el, i) => {
+                let tempData = this.findByMatchingPropertiesCheckbox(this.showData, { RAM: el });
+                if (tempData.length > 0) {
+                    tempArray.push(tempData);
+                }                
+            });
+            this.showData = [];
+            tempArray.map((element) => {
+                element.map((subel) => {
+                    this.showData.push(subel);
+                });
+            });
+        }
+        this.filteredData = this.showData;
+        this.total_records = this.filteredData.length;
+        this.getThisPage(1);
     }
 
+    /**
+     * 
+     * This function is used to add / remove checked / unchecked  element in array
+     * @param event event
+     */
     checkUncheckThis(event) {
         this.showData = [];
         if (event.target.checked) {
@@ -144,24 +152,27 @@ export class AppComponent {
                 this.checkedRam.splice(index, 1);
             }
         }
-        if (this.checkedRam.length) {
-            this.checkedRam.map((el) => {
-                this.showData = [...this.showData, ...this.findByMatchingPropertiesCheckbox(this.filteredData, { RAM: el })];
-            });
-        } else {
-            this.showData = this.filteredData;
-            this.getThisPage(1);
-        }
+        this.filterData(this.hddFilter, '');
     }
 
-    getThisPage(cur_page, data = null) {
+    /**
+     * 
+     * This function is used to get the selected number grid from pagination
+     * @param cur_page number
+     */
+    getThisPage(cur_page) {
         this.cur_page = cur_page;
-        let offset = (this.cur_page - 1) * this.selectedValue + 1;
-        let endOffset = (this.selectedValue * this.cur_page) + 1;
+        let offset = (this.cur_page - 1) * this.selectedValue;
+        let endOffset = this.selectedValue * this.cur_page;
         this.showData = this.filteredData.slice(offset, endOffset);
-        this.total_records = data.length;
+        this.total_records = this.filteredData.length;
     }
 
+    /**
+     * 
+     * This function is used to set the total number of records to show in the grid
+     * @param selectedValue number
+     */
     setThisPageSize(selectedValue) {
         this.page_size = selectedValue;
         this.selectedValue = selectedValue;
@@ -170,20 +181,17 @@ export class AppComponent {
         this.showData = this.filteredData.slice(offset, endOffset);
     }
 
-    findByMatchingProperties(set, properties) {
-        return set.filter(function (entry) {
-            return Object.keys(properties).every(function (key) {
-                return entry[key].includes(properties[key]);
-            });
-        });
-    }
-
+    /**
+     * 
+     * This function is used to filter the given key value from the array of object with dynamic regex
+     * @param set Object
+     * @param properties Key Value pair of object to match
+     */
     findByMatchingPropertiesCheckbox(set, properties) {
         return set.filter(function (entry) {
             return Object.keys(properties).every(function (key) {
                 let patt = new RegExp("^"+properties[key]);
                 return patt.test(entry[key]);
-                // return entry[key].includes(properties[key]);
             });
         });
     }

@@ -22,6 +22,6 @@
     </div>
 
     <div class="text-right right-float">
-        <div class="mrgn-t-md mrgn-r-md"> Showing {{ getMin() }} - {{ getMax() }} of total {{ count }} records</div>
+        <div class="mrgn-t-md mrgn-r-md"> Showing {{ count > 0 ? getMin() : 0 }} - {{ getMax() }} of total {{ count }} records</div>
     </div>
 </div>

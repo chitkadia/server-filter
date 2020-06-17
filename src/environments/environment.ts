@@ -3,16 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  default_page_size: 5,
-  pageSize: [
-    { value: 5 },
-    { value: 10 },
-    { value: 25 },
-    { value: 50 },
-    { value: 100 }
-  ],
-  pagesToShow: 7
+    production: false,
+    default_page_size: 5,
+    pageSize: [
+        { value: 5 },
+        { value: 10 },
+        { value: 25 },
+        { value: 50 },
+        { value: 100 }
+    ],
+    pagesToShow: 7
 };
 
 /*

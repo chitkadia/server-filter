@@ -9,17 +9,17 @@ import { PaginationComponent } from './pagination/pagination/pagination.componen
 import { CustomRangeSlideDirective } from './directive/custom-range.directive';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PaginationComponent,
-    CustomRangeSlideDirective
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        PaginationComponent,
+        CustomRangeSlideDirective
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        ReactiveFormsModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
