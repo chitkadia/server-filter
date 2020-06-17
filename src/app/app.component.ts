@@ -21,6 +21,7 @@ export class AppComponent {
     title = 'Infibeam';
     jsonData: jsonData[] = jsonData; // Main data
     showData: Array<any> = []; // Filtered data
+    filteredData: Array<any> = [];
     locationList: Array<any> = [];
     hdd: Array<any> = [
         { name: "SAS", value: "SAS" },
@@ -60,6 +61,7 @@ export class AppComponent {
 
     ngOnInit() {
         this.showData = this.jsonData;
+        this.filteredData = this.jsonData;
         this.total_records = this.jsonData.length;
         this.locationList = this.jsonData.map((location, i) => {
             return location.Location
@@ -74,46 +76,58 @@ export class AppComponent {
                     if (val.exteriorRang.toString().length == 3) {
                         gbtb = "GB";
                     }
-                    this.filterData(val.exteriorRang + gbtb, "STORAGE");
+                    this.filterData("x" + val.exteriorRang + gbtb, "STORAGE");
                 } else {
                     this.filterData("x", "STORAGE");
                 }
             }
         });
-        this.getThisPage(1, this.jsonData);
+        this.getThisPage(1, this.filteredData);
     }
 
     filterData(element, itemName) {
         switch (itemName) {
             case "HDD":
-                this.showData = this.findByMatchingProperties(this.jsonData, { HDD: element });
+                this.showData = this.findByMatchingProperties(this.filteredData, { HDD: element });
+                this.filteredData = this.showData;
                 var data = this.showData;
                 if (element == 0) {
                     data = this.jsonData;
+                    // this.showData = this.jsonData;
+                    // this.filteredData = this.jsonData;
                 }
                 this.getThisPage(1, data);
                 break;
             case "Location":
-                this.showData = this.findByMatchingProperties(this.jsonData, { Location: element });
+                this.showData = this.findByMatchingProperties(this.filteredData, { Location: element });
+                // this.filteredData = this.showData;
                 var data = this.showData;
                 if (element == 0) {
                     data = this.jsonData;
+                    // this.showData = this.jsonData;
+                    // this.filteredData = this.jsonData;
                 }
                 this.getThisPage(1, data);
                 break;
             case "STORAGE":
-                this.showData = this.findByMatchingProperties(this.jsonData, { HDD: element });
+                this.showData = this.findByMatchingProperties(this.filteredData, { HDD: element });
+                // this.filteredData = this.showData;
                 var data = this.showData;
                 if (element == 0) {
                     data = this.jsonData;
+                    // this.showData = this.jsonData;
+                    // this.filteredData = this.jsonData;
                 }
                 this.getThisPage(1, data);
                 break;
             default:
-                this.showData = this.findByMatchingProperties(this.jsonData, { HDD: element });
+                this.showData = this.findByMatchingProperties(this.filteredData, { HDD: element });
+                // this.filteredData = this.showData;
                 var data = this.showData;
                 if (element == 0) {
                     data = this.jsonData;
+                    // this.showData = this.jsonData;
+                    // this.filteredData = this.jsonData;
                 }
                 this.getThisPage(1, data);
                 break;
@@ -132,10 +146,11 @@ export class AppComponent {
         }
         if (this.checkedRam.length) {
             this.checkedRam.map((el) => {
-                this.showData = [...this.showData, ...this.findByMatchingProperties(this.jsonData, { RAM: el })];
+                this.showData = [...this.showData, ...this.findByMatchingPropertiesCheckbox(this.filteredData, { RAM: el })];
             });
         } else {
-            this.showData = this.jsonData;
+            this.showData = this.filteredData;
+            this.getThisPage(1);
         }
     }
 
@@ -143,7 +158,7 @@ export class AppComponent {
         this.cur_page = cur_page;
         let offset = (this.cur_page - 1) * this.selectedValue + 1;
         let endOffset = (this.selectedValue * this.cur_page) + 1;
-        this.showData = data.slice(offset, endOffset);
+        this.showData = this.filteredData.slice(offset, endOffset);
         this.total_records = data.length;
     }
 
@@ -152,13 +167,23 @@ export class AppComponent {
         this.selectedValue = selectedValue;
         let offset = (this.cur_page - 1) * selectedValue + 1;
         let endOffset = (selectedValue * this.cur_page) + 1;
-        this.showData = this.jsonData.slice(offset, endOffset);
+        this.showData = this.filteredData.slice(offset, endOffset);
     }
 
     findByMatchingProperties(set, properties) {
         return set.filter(function (entry) {
             return Object.keys(properties).every(function (key) {
                 return entry[key].includes(properties[key]);
+            });
+        });
+    }
+
+    findByMatchingPropertiesCheckbox(set, properties) {
+        return set.filter(function (entry) {
+            return Object.keys(properties).every(function (key) {
+                let patt = new RegExp("^"+properties[key]);
+                return patt.test(entry[key]);
+                // return entry[key].includes(properties[key]);
             });
         });
     }
