@@ -1,0 +1,27 @@
+<div fxFlex="50" class="pageshow" fxLayout="row">
+
+    <div class="mrgn-t-md mrgn-r-md"><b>Items per page :</b></div>
+    <select #pagin (change)="setThisPageSize(pagin.value)">
+        <option *ngFor="let page of pageSize" [value]="page.value">{{ page.value }}</option>
+    </select>
+</div>
+<div class="pagination width-50" style="display:inline-block;">
+
+    <div class="text-right right-float" style="margin: 0 1rem;" *ngIf="count > perPage && !hidePagination">
+        <a href="javascript:void(0);" mdTooltip="Previous Page" mdTooltipPosition="above"
+            [ngClass]="(page==1)?'disabled page_arrow':'page_arrow'" (click)="onPrev(page-1)">
+            <span style="font-size: 20px;font-weight: 400;"><</span>
+        </a>
+
+        <a *ngFor="let i of getPages()" (click)="onPage(i)"
+            [ngClass]="(i == '...') ? 'avoid-clicks pointer' : (i == page) ? 'active pointer' : 'pointer'">{{i}}</a>
+        <a href="javascript:void(0);" mdTooltip="Next Page" mdTooltipPosition="above"
+            [ngClass]="(page==totalPages())?'disabled page_arrow':'page_arrow pointer'" (click)="onNext(page+1)">
+            <span style="font-size: 20px;font-weight: 400;">></span>
+        </a>
+    </div>
+
+    <div class="text-right right-float">
+        <div class="mrgn-t-md mrgn-r-md"> Showing {{ getMin() }} - {{ getMax() }} of total {{ count }} records</div>
+    </div>
+</div>
